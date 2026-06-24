@@ -11,11 +11,11 @@ llm = ChatGoogleGenerativeAI(
 notes_prompt = ChatPromptTemplate.from_template(
     "Create Study Notes about {topic} in bullet points."
 )
-notes_chain = notes_prompt | llm | StrOutputParser()
-notes = notes_chain.invoke({"topic":"Agentic AI"})
 quiz_prompt = ChatPromptTemplate.from_template(
     "Create a Quiz from {notes}"
 )
-quiz_chain = quiz_prompt | llm | StrOutputParser()
-response = quiz_chain.invoke({"notes": notes})
+chain = (
+    {"notes": notes_prompt | llm | StrOutputParser()} | quiz_prompt | llm | StrOutputParser()
+)
+response = chain.invoke({"topic": "Agentic AI"})
 print(response)
